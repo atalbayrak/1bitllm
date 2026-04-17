@@ -3,81 +3,136 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bonsai GGUF Models</title>
-    <style>
-      :root {
-        color-scheme: light dark;
-        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      }
-
-      body {
-        margin: 0;
-        min-height: 100vh;
-        background: linear-gradient(180deg, #0f172a, #1e293b);
-        color: #e2e8f0;
-        display: grid;
-        place-items: center;
-      }
-
-      main {
-        width: min(920px, 92vw);
-        padding: 2rem;
-      }
-
-      h1 {
-        margin-top: 0;
-        font-size: clamp(1.8rem, 4vw, 2.6rem);
-      }
-
-      p {
-        color: #cbd5e1;
-      }
-
-      .models {
-        list-style: none;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-        gap: 1rem;
-        padding: 0;
-        margin: 1.5rem 0 0;
-      }
-
-      .model {
-        background: rgba(15, 23, 42, 0.65);
-        border: 1px solid rgba(148, 163, 184, 0.4);
-        border-radius: 0.85rem;
-        padding: 1rem;
-      }
-
-      .model a {
-        color: #93c5fd;
-        font-weight: 700;
-        text-decoration: none;
-      }
-
-      .model a:hover {
-        text-decoration: underline;
-      }
-    </style>
+    <title>Bonsai 1-bit WebGPU</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <main>
-      <h1>Bonsai GGUF Model Hub</h1>
-      <p>GitHub Pages ready landing page for the Bonsai family on Hugging Face.</p>
-      <ul class="models">
-        <li class="model">
-          <a href="https://huggingface.co/prism-ml/Bonsai-8B-gguf" target="_blank" rel="noopener noreferrer">Bonsai-8B-gguf</a>
-          <p>Largest Bonsai model in this set.</p>
-        </li>
-        <li class="model">
-          <a href="https://huggingface.co/prism-ml/Bonsai-4B-gguf" target="_blank" rel="noopener noreferrer">Bonsai-4B-gguf</a>
-          <p>Mid-size Bonsai model for balanced usage.</p>
-        </li>
-        <li class="model">
-          <a href="https://huggingface.co/prism-ml/Bonsai-1.7B-gguf" target="_blank" rel="noopener noreferrer">Bonsai-1.7B-gguf</a>
-          <p>Lightweight Bonsai model for constrained environments.</p>
-        </li>
-      </ul>
+    <div class="grain" aria-hidden="true"></div>
+    <main class="page">
+      <section class="hero reveal">
+        <div class="hero-top">
+          <span class="kicker">1-bit WebGPU LLM Demo</span>
+          <span id="webgpuBadge" class="status-pill waiting">Checking WebGPU...</span>
+        </div>
+        <div class="hero-copy">
+          <h1>1-bit LLMs, in your browser.</span></h1>
+          <p>
+            Run LLMs  entirely locally in your browser on
+            WebGPU, powered by Transformers.js.
+          </p>
+        </div>
+        <a id="tryDemoButton" class="btn btn-primary hero-cta" href="#playground">
+          Try the demo
+          <span class="arrow">-></span>
+        </a>
+      </section>
+
+      <section id="playground" class="playground reveal">
+        <div id="selectView" class="stage select-stage">
+          <div class="select-head">
+            <h2>Load <span class="em">locally.</span></h2>
+            <p>
+              Each Bonsai model runs in your browser via WebGPU.
+              Pick a size - smaller loads faster, larger reasons better.
+            </p>
+          </div>
+          <div id="modelGrid" class="model-grid"></div>
+          <div class="select-actions">
+            <button id="loadModelButton" class="btn btn-primary" type="button" disabled>
+              <span id="loadButtonLabel">Load Bonsai 1.7B</span>
+              <span class="arrow">-></span>
+            </button>
+          </div>
+        </div>
+
+        <div id="loadingView" class="stage hidden">
+          <div class="load-card">
+            <div class="prism spin"></div>
+            <div class="label">Initializing</div>
+            <h3 id="loadTitle">Bonsai 1.7B</h3>
+            <div class="progress">
+              <div id="progressBar" class="fill"></div>
+            </div>
+            <div class="load-row">
+              <span id="loadLabel">Fetching weights</span>
+              <span id="loadPercent">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="errorView" class="stage hidden">
+          <div class="load-card">
+            <div class="label">Error</div>
+            <h3>Could not <span class="em">load.</span></h3>
+            <p id="errorText" class="error-text"></p>
+            <button id="backButton" class="btn btn-primary" type="button">Back</button>
+          </div>
+        </div>
+
+        <div id="chatView" class="stage hidden">
+          <div class="pg-header-bar">
+            <h2 class="pg-title">The <span class="em">playground.</span></h2>
+            <div class="pg-mini">
+              <span class="chip">
+                <span class="k">model</span>
+                <span id="selectedModelChip">Bonsai 1.7B</span>
+              </span>
+              <span class="chip">
+                <span class="k">size</span>
+                <span id="selectedSizeChip">290 MB</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="chat">
+            <div class="chat-bar">
+              <div class="left">
+                <span class="dots">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </span>
+                <span>BONSAI WebGPU</span>
+              </div>
+              <div class="right">
+                <span id="tpsChip" class="tps-value">--</span>
+                <span class="tps-label">Tokens / sec</span>
+              </div>
+            </div>
+
+            <div id="chatLog" class="messages" aria-live="polite">
+              <div id="emptyState" class="empty-state">
+                <div class="prism"></div>
+                <div class="empty-title">How can I help you?</div>
+                <div class="empty-sub">Talk to a 1-bit model</div>
+              </div>
+            </div>
+
+            <form id="composer" class="composer">
+              <label for="promptInput" class="visually-hidden">Prompt</label>
+              <textarea
+                id="promptInput"
+                rows="1"
+                maxlength="4000"
+                placeholder="Ask the 1-bit model anything..."
+                disabled
+              ></textarea>
+              <div class="composer-actions">
+                <button id="resetButton" type="button" class="btn btn-ghost" disabled>Reset</button>
+                <button id="stopButton" type="button" class="btn btn-ghost" disabled>Stop</button>
+                <button id="sendButton" type="submit" class="btn btn-primary" disabled>Send</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
     </main>
+    <script type="module" src="./app.js"></script>
   </body>
 </html>
