@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bonsai GGUF Models</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: linear-gradient(180deg, #0f172a, #1e293b);
+        color: #e2e8f0;
+        display: grid;
+        place-items: center;
+      }
+
+      main {
+        width: min(920px, 92vw);
+        padding: 2rem;
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+      }
+
+      p {
+        color: #cbd5e1;
+      }
+
+      .models {
+        list-style: none;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 1rem;
+        padding: 0;
+        margin: 1.5rem 0 0;
+      }
+
+      .model {
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        border-radius: 0.85rem;
+        padding: 1rem;
+      }
+
+      .model a {
+        color: #93c5fd;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .model a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Bonsai GGUF Model Hub</h1>
+      <p>GitHub Pages ready landing page for the Bonsai family on Hugging Face.</p>
+      <ul class="models">
+        <li class="model">
+          <a href="https://huggingface.co/prism-ml/Bonsai-8B-gguf" target="_blank" rel="noopener noreferrer">Bonsai-8B-gguf</a>
+          <p>Largest Bonsai model in this set.</p>
+        </li>
+        <li class="model">
+          <a href="https://huggingface.co/prism-ml/Bonsai-4B-gguf" target="_blank" rel="noopener noreferrer">Bonsai-4B-gguf</a>
+          <p>Mid-size Bonsai model for balanced usage.</p>
+        </li>
+        <li class="model">
+          <a href="https://huggingface.co/prism-ml/Bonsai-1.7B-gguf" target="_blank" rel="noopener noreferrer">Bonsai-1.7B-gguf</a>
+          <p>Lightweight Bonsai model for constrained environments.</p>
+        </li>
+      </ul>
+    </main>
+  </body>
+</html>
